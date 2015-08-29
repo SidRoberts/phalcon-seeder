@@ -290,7 +290,11 @@ class Seeder extends \Phalcon\Di\Injectable implements \Phalcon\Events\EventsAwa
                 foreach ($indexAnnotations as $indexAnnotation) {
                     $arguments = $indexAnnotation->getArguments();
 
-                    $indexes[] = new \Phalcon\Db\Index($arguments[0], $arguments[1]);
+                    $name    = $arguments[0];
+                    $columns = $arguments[1];
+                    $type    = isset($arguments[2]) ? $arguments[2] : null;
+
+                    $indexes[] = new \Phalcon\Db\Index($name, $columns, $type);
                 }
             }
         }
