@@ -51,7 +51,8 @@ class Seeder extends \Phalcon\Di\Injectable implements \Phalcon\Events\EventsAwa
                     $model->getSource(),
                     null,
                     [
-                        "columns" => $modelAnnotations->getColumns()
+                        "columns" => $modelAnnotations->getColumns(),
+                        "options" => $modelAnnotations->getTableOptions()
                     ]
                 );
 

@@ -73,6 +73,38 @@ class Annotations extends \Phalcon\Di\Injectable
     /**
      * @return array
      */
+    public function getTableOptions()
+    {
+        $options = [];
+
+        $classAnnotations = $this->annotations->get(get_class($this->model))->getClassAnnotations();
+
+        if ($classAnnotations) {
+            if ($classAnnotations->has("Engine")) {
+                $engineAnnotation = $classAnnotations->get("Engine");
+
+                $options["ENGINE"] = $engineAnnotation->getArgument(0);
+            }
+
+            if ($classAnnotations->has("AutoIncrement")) {
+                $autoIncrementAnnotation = $classAnnotations->get("AutoIncrement");
+
+                $options["AUTO_INCREMENT"] = $autoIncrementAnnotation->getArgument(0);
+            }
+
+            if ($classAnnotations->has("Collation")) {
+                $collationAnnotation = $classAnnotations->get("Collation");
+
+                $options["TABLE_COLLATION"] = $collationAnnotation->getArgument(0);
+            }
+        }
+
+        return $options;
+    }
+
+    /**
+     * @return array
+     */
     public function getIndexes()
     {
         $indexes = [];
