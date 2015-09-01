@@ -141,7 +141,9 @@ class Seeder extends \Phalcon\Di\Injectable implements \Phalcon\Events\EventsAwa
                 foreach ($data as $datum) {
                     $row = new $modelClass();
 
-                    if (!$row->create($datum)) {
+                    $row->assign($datum);
+
+                    if (!$row->create()) {
                         throw new \Sid\Phalcon\Seeder\Exception("Data not created for `" . $model->getSource() . "`.");
                     }
                 }
