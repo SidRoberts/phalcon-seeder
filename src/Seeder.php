@@ -347,6 +347,24 @@ class Seeder extends \Phalcon\Di\Injectable implements \Phalcon\Events\EventsAwa
                     $data[] = $dataAnnotation->getArgument(0);
                 }
             }
+
+            if ($classAnnotations->has("DataJson")) {
+                $guzzle = new \GuzzleHttp\Client();
+
+                $dataJsonAnnotations = $classAnnotations->getAll("DataJson");
+
+                foreach ($dataJsonAnnotations as $dataJsonAnnotation) {
+                    $url = $dataJsonAnnotation->getArgument(0);
+
+                    $response = $guzzle->get($url);
+
+                    $json = json_decode($response->getBody(), true);
+
+                    foreach ($json as $datum) {
+                        $data[] = $datum;
+                    }
+                }
+            }
         }
 
         return $data;

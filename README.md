@@ -49,6 +49,8 @@ Class annotations are used to store indexes, references and any initial data you
  *
  * @Data({userID=1, emailAddress="sid1@sidroberts.co.uk", password="S3CR3T"})
  * @Data({userID=2, emailAddress="sid2@sidroberts.co.uk", password="P4SSW0RD"})
+ *
+ * @DataJson("http://my-website.com/path/to/some/data.json")
  */
 class Users extends \Phalcon\Mvc\Model
 {
