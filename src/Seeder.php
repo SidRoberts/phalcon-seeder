@@ -174,6 +174,12 @@ class Seeder extends \Phalcon\Di\Injectable implements \Phalcon\Events\EventsAwa
             $this->db->begin();
 
             foreach ($models as $model) {
+                if (!$this->db->tableExists($model->getSource())) {
+                    continue;
+                }
+
+
+
                 $modelAnnotations = new \Sid\Phalcon\Seeder\Annotations($model);
 
                 $references = $modelAnnotations->getReferences();
