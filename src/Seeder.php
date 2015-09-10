@@ -215,6 +215,34 @@ class Seeder extends \Phalcon\Di\Injectable implements \Phalcon\Events\EventsAwa
 
 
                 if ($eventsManager instanceof \Phalcon\Events\ManagerInterface) {
+                    $eventsManager->fire("seeder:beforeTruncateTable", $model);
+                }
+
+                $rows = $model::find();
+
+                foreach ($rows as $row) {
+                    $row->delete();
+                }
+
+                $success = ($model::count() == 0);
+
+                if (!$success) {
+                    throw new \Sid\Phalcon\Seeder\Exception("Table `" . $model->getSource() . "` not truncated.");
+                }
+
+                if ($eventsManager instanceof \Phalcon\Events\ManagerInterface) {
+                    $eventsManager->fire("seeder:afterTruncateTable", $model);
+                }
+            }
+
+            foreach ($models as $model) {
+                if (!$this->db->tableExists($model->getSource())) {
+                    continue;
+                }
+
+
+
+                if ($eventsManager instanceof \Phalcon\Events\ManagerInterface) {
                     $eventsManager->fire("seeder:beforeDropTable", $model);
                 }
 
