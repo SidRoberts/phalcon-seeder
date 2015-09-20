@@ -121,7 +121,9 @@ class Seeder extends \Phalcon\Di\Injectable implements \Phalcon\Events\EventsAwa
                 }
             }
 
-            foreach ($models as $model) {
+            $modelsOrderedForSeedingInitialData = $this->orderForSeedingInitialData($models);
+
+            foreach ($modelsOrderedForSeedingInitialData as $model) {
                 $modelAnnotations = new \Sid\Phalcon\Seeder\Annotations($model);
 
                 $data = $modelAnnotations->getInitialData();
@@ -263,5 +265,46 @@ class Seeder extends \Phalcon\Di\Injectable implements \Phalcon\Events\EventsAwa
 
             throw $e;
         }
+    }
+
+    /**
+     * This method is a complicated mess and will get rewritten at some point.
+     * The problem it addresses is: when you seed the initial data, you can
+     * run into problems with foreign keys. For example, you might have two
+     * models: Posts and Comments. A Comment depends on a Post and so initial
+     * data needs to be added to Posts first and then to Comments. If you try to
+     * write to Comments first, the foreign key/reference will cause it to fail.
+     * This method sorts the models in an order that ensures that models come
+     * after any other models they depend on.
+     */
+    protected function orderForSeedingInitialData(array $models)
+    {
+        $modelsWaitingToBeSorted = [];
+
+        foreach ($models as $model) {
+            $modelsWaitingToBeSorted[$model->getSource()] = $model;
+        }
+
+        $newOrder = [];
+
+        while (count($modelsWaitingToBeSorted) > 0) {
+            foreach ($modelsWaitingToBeSorted as $source => $model) {
+                $modelAnnotations = new \Sid\Phalcon\Seeder\Annotations($model);
+
+                $references = $modelAnnotations->getReferences();
+
+                foreach ($references as $reference) {
+                    if (in_array($reference->getReferencedTable(), array_keys($modelsWaitingToBeSorted))) {
+                        // A referenced table is still waiting, so keep this one in.
+                        continue 2;
+                    }
+                }
+
+                $newOrder[] = $model;
+                unset($modelsWaitingToBeSorted[$source]);
+            }
+        }
+
+        return $newOrder;
     }
 }
