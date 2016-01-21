@@ -4,17 +4,24 @@ namespace Sid\Phalcon\Seeder;
 
 class Annotations extends \Phalcon\Di\Injectable
 {
+    /**
+     * @var \Phalcon\Mvc\ModelInterface
+     */
     protected $model;
 
 
-
+    /**
+     * @param \Phalcon\Mvc\ModelInterface $model
+     *
+     * @throws Exception
+     */
     public function __construct(\Phalcon\Mvc\ModelInterface $model)
     {
         $this->model = $model;
 
         $di = $this->getDI();
         if (!($di instanceof \Phalcon\DiInterface)) {
-            throw new \Sid\Phalcon\Seeder\Exception("A dependency injection object is required to access internal services");
+            throw new Exception("A dependency injection object is required to access internal services");
         }
     }
 
@@ -194,6 +201,11 @@ class Annotations extends \Phalcon\Di\Injectable
         return $data;
     }
 
+    /**
+     * @param string $type
+     *
+     * @return integer
+     */
     protected function getColumnTypeConstant($type)
     {
         $columnTypes = [
