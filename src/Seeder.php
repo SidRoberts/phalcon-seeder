@@ -45,130 +45,46 @@ class Seeder extends \Phalcon\Di\Injectable implements \Phalcon\Events\EventsAwa
     /**
      * @param array $models
      *
-     * @throws Exception
      * @throws \Exception
      */
     public function seed($models)
     {
-        $eventsManager = $this->getEventsManager();
-
         try {
             $this->db->begin();
 
-            foreach ($models as $model) {
-                if ($eventsManager instanceof \Phalcon\Events\ManagerInterface) {
-                    $eventsManager->fire("seeder:beforeCreateTable", $model);
-                }
+            $this->createTables($models);
 
-                $modelAnnotations = new \Sid\Phalcon\Seeder\Annotations($model);
+            $this->createModelIndexes($models);
 
-                $success = $this->db->createTable(
-                    $model->getSource(),
-                    null,
-                    [
-                        "columns" => $modelAnnotations->getColumns(),
-                        "options" => $modelAnnotations->getTableOptions()
-                    ]
-                );
+            $this->createModelReferences($models);
 
-                if (!$success) {
-                    throw new Exception("Table `" . $model->getSource() . "` not created.");
-                }
+            $this->createModelData($models);
 
-                if ($eventsManager instanceof \Phalcon\Events\ManagerInterface) {
-                    $eventsManager->fire("seeder:afterCreateTable", $model);
-                }
-            }
+            $this->db->commit();
+        } catch (\Exception $e) {
+            $this->db->rollback();
 
-            foreach ($models as $model) {
-                $modelAnnotations = new \Sid\Phalcon\Seeder\Annotations($model);
-
-                $indexes = $modelAnnotations->getIndexes();
-
-                if (!$indexes) {
-                    continue;
-                }
+            throw $e;
+        }
+    }
 
 
 
-                if ($eventsManager instanceof \Phalcon\Events\ManagerInterface) {
-                    $eventsManager->fire("seeder:beforeCreateModelIndexes", $model);
-                }
+    /**
+     * @param array $models
+     *
+     * @throws \Exception
+     */
+    public function drop($models)
+    {
+        try {
+            $this->db->begin();
 
-                foreach ($indexes as $index) {
-                    $success = $this->db->addIndex($model->getSource(), null, $index);
+            $this->dropModelReferences($models);
 
-                    if (!$success) {
-                        throw new Exception("Index `" . $index->getName() . "` on `" . $model->getSource() . "` not created.");
-                    }
-                }
+            $this->truncateTables($models);
 
-                if ($eventsManager instanceof \Phalcon\Events\ManagerInterface) {
-                    $eventsManager->fire("seeder:afterCreateModelIndexes", $model);
-                }
-            }
-
-            foreach ($models as $model) {
-                $modelAnnotations = new \Sid\Phalcon\Seeder\Annotations($model);
-
-                $references = $modelAnnotations->getReferences();
-
-                if (!$references) {
-                    continue;
-                }
-
-
-
-                if ($eventsManager instanceof \Phalcon\Events\ManagerInterface) {
-                    $eventsManager->fire("seeder:beforeCreateModelReferences", $model);
-                }
-
-                foreach ($references as $reference) {
-                    $success = $this->db->addForeignKey($model->getSource(), $reference->getSchemaName(), $reference);
-
-                    if (!$success) {
-                        throw new Exception("Reference `" . $reference->getName() . "` on `" . $model->getSource() . "` not created.");
-                    }
-                }
-
-                if ($eventsManager instanceof \Phalcon\Events\ManagerInterface) {
-                    $eventsManager->fire("seeder:afterCreateModelReferences", $model);
-                }
-            }
-
-            $modelsOrderedForSeedingInitialData = $this->orderForSeedingInitialData($models);
-
-            foreach ($modelsOrderedForSeedingInitialData as $model) {
-                $modelAnnotations = new \Sid\Phalcon\Seeder\Annotations($model);
-
-                $data = $modelAnnotations->getInitialData();
-
-                if (!$data) {
-                    continue;
-                }
-
-
-
-                if ($eventsManager instanceof \Phalcon\Events\ManagerInterface) {
-                    $eventsManager->fire("seeder:beforeCreateModelData", $model);
-                }
-
-                $modelClass = get_class($model);
-
-                foreach ($data as $datum) {
-                    $row = new $modelClass();
-
-                    $row->assign($datum);
-
-                    if (!$row->create()) {
-                        throw new Exception("Data not created for `" . $model->getSource() . "`.");
-                    }
-                }
-
-                if ($eventsManager instanceof \Phalcon\Events\ManagerInterface) {
-                    $eventsManager->fire("seeder:afterCreateModelData", $model);
-                }
-            }
+            $this->dropTables($models);
 
             $this->db->commit();
         } catch (\Exception $e) {
@@ -184,106 +100,274 @@ class Seeder extends \Phalcon\Di\Injectable implements \Phalcon\Events\EventsAwa
      * @param array $models
      *
      * @throws Exception
-     * @throws \Exception
      */
-    public function drop($models)
+    protected function createTables($models)
     {
         $eventsManager = $this->getEventsManager();
 
-        try {
-            $this->db->begin();
-
-            foreach ($models as $model) {
-                if (!$this->db->tableExists($model->getSource())) {
-                    continue;
-                }
-
-
-
-                $modelAnnotations = new \Sid\Phalcon\Seeder\Annotations($model);
-
-                $references = $modelAnnotations->getReferences();
-
-                if (!$references) {
-                    continue;
-                }
-
-
-
-                if ($eventsManager instanceof \Phalcon\Events\ManagerInterface) {
-                    $eventsManager->fire("seeder:beforeDropModelReferences", $model);
-                }
-
-                foreach ($references as $reference) {
-                    $success = $this->db->dropForeignKey($model->getSource(), $reference->getSchemaName(), $reference->getName());
-
-                    if (!$success) {
-                        throw new Exception("Reference `" . $reference->getName() . "` on `" . $model->getSource() . "` not dropped.");
-                    }
-                }
-
-                if ($eventsManager instanceof \Phalcon\Events\ManagerInterface) {
-                    $eventsManager->fire("seeder:afterDropModelReferences", $model);
-                }
+        foreach ($models as $model) {
+            if ($eventsManager instanceof \Phalcon\Events\ManagerInterface) {
+                $eventsManager->fire("seeder:beforeCreateTable", $model);
             }
 
-            foreach ($models as $model) {
-                if (!$this->db->tableExists($model->getSource())) {
-                    continue;
-                }
+            $modelAnnotations = new \Sid\Phalcon\Seeder\Annotations($model);
 
+            $success = $this->db->createTable(
+                $model->getSource(),
+                null,
+                [
+                    "columns" => $modelAnnotations->getColumns(),
+                    "options" => $modelAnnotations->getTableOptions()
+                ]
+            );
 
-
-                if ($eventsManager instanceof \Phalcon\Events\ManagerInterface) {
-                    $eventsManager->fire("seeder:beforeTruncateTable", $model);
-                }
-
-                $rows = $model::find();
-
-                foreach ($rows as $row) {
-                    $row->delete();
-                }
-
-                $success = ($model::count() == 0);
-
-                if (!$success) {
-                    throw new Exception("Table `" . $model->getSource() . "` not truncated.");
-                }
-
-                if ($eventsManager instanceof \Phalcon\Events\ManagerInterface) {
-                    $eventsManager->fire("seeder:afterTruncateTable", $model);
-                }
+            if (!$success) {
+                throw new Exception("Table `" . $model->getSource() . "` not created.");
             }
 
-            foreach ($models as $model) {
-                if (!$this->db->tableExists($model->getSource())) {
-                    continue;
-                }
-
-
-
-                if ($eventsManager instanceof \Phalcon\Events\ManagerInterface) {
-                    $eventsManager->fire("seeder:beforeDropTable", $model);
-                }
-
-                $success = $this->db->dropTable($model->getSource());
-
-                if (!$success) {
-                    throw new Exception("Table `" . $model->getSource() . "` not dropped.");
-                }
-
-                if ($eventsManager instanceof \Phalcon\Events\ManagerInterface) {
-                    $eventsManager->fire("seeder:afterDropTable", $model);
-                }
+            if ($eventsManager instanceof \Phalcon\Events\ManagerInterface) {
+                $eventsManager->fire("seeder:afterCreateTable", $model);
             }
-
-            $this->db->commit();
-        } catch (\Exception $e) {
-            $this->db->rollback();
-
-            throw $e;
         }
     }
+
+    /**
+     * @param array $models
+     *
+     * @throws Exception
+     */
+    protected function createModelIndexes($models)
+    {
+        $eventsManager = $this->getEventsManager();
+
+        foreach ($models as $model) {
+            $modelAnnotations = new \Sid\Phalcon\Seeder\Annotations($model);
+
+            $indexes = $modelAnnotations->getIndexes();
+
+            if (!$indexes) {
+                continue;
+            }
+
+
+
+            if ($eventsManager instanceof \Phalcon\Events\ManagerInterface) {
+                $eventsManager->fire("seeder:beforeCreateModelIndexes", $model);
+            }
+
+            foreach ($indexes as $index) {
+                $success = $this->db->addIndex($model->getSource(), null, $index);
+
+                if (!$success) {
+                    throw new Exception("Index `" . $index->getName() . "` on `" . $model->getSource() . "` not created.");
+                }
+            }
+
+            if ($eventsManager instanceof \Phalcon\Events\ManagerInterface) {
+                $eventsManager->fire("seeder:afterCreateModelIndexes", $model);
+            }
+        }
+    }
+
+    /**
+     * @param array $models
+     *
+     * @throws Exception
+     */
+    protected function createModelReferences($models)
+    {
+        $eventsManager = $this->getEventsManager();
+
+        foreach ($models as $model) {
+            $modelAnnotations = new \Sid\Phalcon\Seeder\Annotations($model);
+
+            $references = $modelAnnotations->getReferences();
+
+            if (!$references) {
+                continue;
+            }
+
+
+
+            if ($eventsManager instanceof \Phalcon\Events\ManagerInterface) {
+                $eventsManager->fire("seeder:beforeCreateModelReferences", $model);
+            }
+
+            foreach ($references as $reference) {
+                $success = $this->db->addForeignKey($model->getSource(), $reference->getSchemaName(), $reference);
+
+                if (!$success) {
+                    throw new Exception("Reference `" . $reference->getName() . "` on `" . $model->getSource() . "` not created.");
+                }
+            }
+
+            if ($eventsManager instanceof \Phalcon\Events\ManagerInterface) {
+                $eventsManager->fire("seeder:afterCreateModelReferences", $model);
+            }
+        }
+    }
+
+    /**
+     * @param array $models
+     *
+     * @throws Exception
+     */
+    protected function createModelData($models)
+    {
+        $eventsManager = $this->getEventsManager();
+
+        $modelsOrderedForSeedingInitialData = $this->orderForSeedingInitialData($models);
+
+        foreach ($modelsOrderedForSeedingInitialData as $model) {
+            $modelAnnotations = new \Sid\Phalcon\Seeder\Annotations($model);
+
+            $data = $modelAnnotations->getInitialData();
+
+            if (!$data) {
+                continue;
+            }
+
+
+
+            if ($eventsManager instanceof \Phalcon\Events\ManagerInterface) {
+                $eventsManager->fire("seeder:beforeCreateModelData", $model);
+            }
+
+            $modelClass = get_class($model);
+
+            foreach ($data as $datum) {
+                $row = new $modelClass();
+
+                $row->assign($datum);
+
+                if (!$row->create()) {
+                    throw new Exception("Data not created for `" . $model->getSource() . "`.");
+                }
+            }
+
+            if ($eventsManager instanceof \Phalcon\Events\ManagerInterface) {
+                $eventsManager->fire("seeder:afterCreateModelData", $model);
+            }
+        }
+    }
+
+
+
+    /**
+     * @param array $models
+     *
+     * @throws Exception
+     */
+    protected function dropModelReferences($models)
+    {
+        $eventsManager = $this->getEventsManager();
+
+        foreach ($models as $model) {
+            if (!$this->db->tableExists($model->getSource())) {
+                continue;
+            }
+
+
+
+            $modelAnnotations = new \Sid\Phalcon\Seeder\Annotations($model);
+
+            $references = $modelAnnotations->getReferences();
+
+            if (!$references) {
+                continue;
+            }
+
+
+
+            if ($eventsManager instanceof \Phalcon\Events\ManagerInterface) {
+                $eventsManager->fire("seeder:beforeDropModelReferences", $model);
+            }
+
+            foreach ($references as $reference) {
+                $success = $this->db->dropForeignKey($model->getSource(), $reference->getSchemaName(), $reference->getName());
+
+                if (!$success) {
+                    throw new Exception("Reference `" . $reference->getName() . "` on `" . $model->getSource() . "` not dropped.");
+                }
+            }
+
+            if ($eventsManager instanceof \Phalcon\Events\ManagerInterface) {
+                $eventsManager->fire("seeder:afterDropModelReferences", $model);
+            }
+        }
+    }
+
+    /**
+     * @param array $models
+     *
+     * @throws Exception
+     */
+    protected function truncateTables($models)
+    {
+        $eventsManager = $this->getEventsManager();
+
+        foreach ($models as $model) {
+            if (!$this->db->tableExists($model->getSource())) {
+                continue;
+            }
+
+
+
+            if ($eventsManager instanceof \Phalcon\Events\ManagerInterface) {
+                $eventsManager->fire("seeder:beforeTruncateTable", $model);
+            }
+
+            $rows = $model::find();
+
+            foreach ($rows as $row) {
+                $row->delete();
+            }
+
+            $success = ($model::count() == 0);
+
+            if (!$success) {
+                throw new Exception("Table `" . $model->getSource() . "` not truncated.");
+            }
+
+            if ($eventsManager instanceof \Phalcon\Events\ManagerInterface) {
+                $eventsManager->fire("seeder:afterTruncateTable", $model);
+            }
+        }
+    }
+
+    /**
+     * @param array $models
+     *
+     * @throws Exception
+     */
+    protected function dropTables($models)
+    {
+        $eventsManager = $this->getEventsManager();
+
+        foreach ($models as $model) {
+            if (!$this->db->tableExists($model->getSource())) {
+                continue;
+            }
+
+
+
+            if ($eventsManager instanceof \Phalcon\Events\ManagerInterface) {
+                $eventsManager->fire("seeder:beforeDropTable", $model);
+            }
+
+            $success = $this->db->dropTable($model->getSource());
+
+            if (!$success) {
+                throw new Exception("Table `" . $model->getSource() . "` not dropped.");
+            }
+
+            if ($eventsManager instanceof \Phalcon\Events\ManagerInterface) {
+                $eventsManager->fire("seeder:afterDropTable", $model);
+            }
+        }
+    }
+
+
 
     /**
      * This method is a complicated mess and will get rewritten at some point.
