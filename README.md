@@ -143,7 +143,7 @@ class SeederTask extends \Phalcon\Cli\Task
 | seeder:afterCreateModelReferences  |
 | seeder:beforeCreateModelData       |
 | seeder:afterCreateModelData        |
-| seeder:beforeDrpoModelReferences   |
+| seeder:beforeDropModelReferences   |
 | seeder:afterDropModelReferences    |
 | seeder:beforeTruncateTable         |
 | seeder:afterTruncateTable          |
