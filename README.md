@@ -9,7 +9,7 @@ Database seeder component for Phalcon.
 
 Install using Composer:
 
-```
+```json
 {
 	"require": {
 		"sidroberts/phalcon-seeder": "dev-master"
