@@ -11,9 +11,9 @@ Install using Composer:
 
 ```json
 {
-	"require": {
-		"sidroberts/phalcon-seeder": "dev-master"
-	}
+    "require": {
+        "sidroberts/phalcon-seeder": "dev-master"
+    }
 }
 ```
 
@@ -25,13 +25,13 @@ Install using Composer:
 
 ```php
 $di->set(
-	"seeder",
-	function () {
-		$seeder = new \Sid\Phalcon\Seeder\Seeder();
-		
-		return $seeder;
-	},
-	true
+    "seeder",
+    function () {
+        $seeder = new \Sid\Phalcon\Seeder\Seeder();
+
+        return $seeder;
+    },
+    true
 );
 ```
 
@@ -44,7 +44,7 @@ Class annotations are used to store indexes, references and any initial data you
 ```php
 /**
  * @Index("emailAddress", ["emailAddress"])
- * 
+ *
  * @Reference("Users_userID", {referencedTable="Posts", columns=["userID"], referencedColumns=["userID"]})
  *
  * @Data({userID=1, emailAddress="sid1@sidroberts.co.uk", password="S3CR3T"})
@@ -60,12 +60,12 @@ class Users extends \Phalcon\Mvc\Model
      * @Column(type="biginteger",nullable=false)
      */
     public $userID;
-    
+
     /**
      * @Column(type="varchar",size=255,nullable=false)
      */
     public $emailAddress;
-    
+
     /**
      * @Column(type="varchar",size=100,nullable=false)
      */
@@ -79,14 +79,14 @@ Property annotations use the same format as the [annotations metadata strategy](
 
 ```php
 $di->set(
-	"modelsMetadata",
-	function () {
-		$modelsMetadata = new \Phalcon\Mvc\Model\MetaData\Memory();
+    "modelsMetadata",
+    function () {
+        $modelsMetadata = new \Phalcon\Mvc\Model\MetaData\Memory();
 
         $modelsMetadata->setStrategy(
             new \Phalcon\Mvc\Model\MetaData\Strategy\Annotations()
         );
-        
+
         return $modelsMetadata;
     },
     true
@@ -107,19 +107,19 @@ class SeederTask extends \Phalcon\Cli\Task
             new \Sid\Pomelo\Models\Users(),
             new \Sid\Pomelo\Models\System\CronJobs(),
         ];
-        
+
         return $models;
     }
 
 
-    
+
     public function seedAction()
     {
         $this->seeder->seed(
             $this->getModels()
         );
     }
-    
+
     public function dropAction()
     {
         $this->seeder->drop(

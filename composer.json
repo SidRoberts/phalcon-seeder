@@ -1,39 +1,39 @@
 {
-	"name":        "sidroberts/phalcon-seeder",
-	"description": "Database seeder component for Phalcon.",
-	"type":        "library",
-	"license":     "MIT",
-	
-	"authors": [
-		{
-			"name":     "Sid Roberts",
-			"email":    "Sid@SidRoberts.co.uk",
-			"homepage": "http://www.SidRoberts.co.uk",
-			"role":     "Developer"
-		}
-	],
-	
-	"support": {
-		"source": "https://www.GitHub.com/SidRoberts/Phalcon-Seeder",
-		"issues": "https://www.GitHub.com/SidRoberts/Phalcon-Seeder/issues",
-		"wiki":   "https://www.GitHub.com/SidRoberts/Phalcon-Seeder/wiki"
-	},
-	
-	
-	
-	"require": {
-		"php": ">= 5.4",
-		
-		"ext-phalcon": ">= 2.0.0",
-		
-		"guzzlehttp/guzzle": "~6.0"
-	},
-	
-	
-	
-	"autoload": {
-		"psr-4": {
-			"Sid\\Phalcon\\Seeder\\": "src/"
-		}
-	}
+    "name":        "sidroberts/phalcon-seeder",
+    "description": "Database seeder component for Phalcon.",
+    "type":        "library",
+    "license":     "MIT",
+
+    "authors": [
+        {
+            "name":     "Sid Roberts",
+            "email":    "Sid@SidRoberts.co.uk",
+            "homepage": "http://www.SidRoberts.co.uk",
+            "role":     "Developer"
+        }
+    ],
+
+    "support": {
+        "source": "https://www.GitHub.com/SidRoberts/Phalcon-Seeder",
+        "issues": "https://www.GitHub.com/SidRoberts/Phalcon-Seeder/issues",
+        "wiki":   "https://www.GitHub.com/SidRoberts/Phalcon-Seeder/wiki"
+    },
+
+
+
+    "require": {
+        "php": ">= 5.4",
+
+        "ext-phalcon": ">= 2.0.0",
+
+        "guzzlehttp/guzzle": "~6.0"
+    },
+
+
+
+    "autoload": {
+        "psr-4": {
+            "Sid\\Phalcon\\Seeder\\": "src/"
+        }
+    }
 }
