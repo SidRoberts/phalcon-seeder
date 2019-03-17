@@ -26,9 +26,14 @@ class Annotations extends Injectable
     {
         $this->model = $model;
 
+
+
         $di = $this->getDI();
+
         if (!($di instanceof DiInterface)) {
-            throw new Exception("A dependency injection object is required to access internal services");
+            throw new Exception(
+                "A dependency injection object is required to access internal services"
+            );
         }
     }
 
@@ -41,7 +46,9 @@ class Annotations extends Injectable
     {
         $columns = [];
 
-        $propertiesAnnotations = $this->annotations->getProperties(get_class($this->model));
+        $propertiesAnnotations = $this->annotations->getProperties(
+            get_class($this->model)
+        );
 
         foreach ($propertiesAnnotations as $property => $propertyAnnotations) {
             if (!$propertyAnnotations->has('Column')) {
@@ -160,7 +167,10 @@ class Annotations extends Injectable
                 foreach ($referenceAnnotations as $referenceAnnotation) {
                     $arguments = $referenceAnnotation->getArguments();
 
-                    $references[] = new Reference($arguments[0], $arguments[1]);
+                    $references[] = new Reference(
+                        $arguments[0],
+                        $arguments[1]
+                    );
                 }
             }
         }
@@ -196,7 +206,10 @@ class Annotations extends Injectable
 
                     $response = $guzzle->get($url);
 
-                    $json = json_decode($response->getBody(), true);
+                    $json = json_decode(
+                        $response->getBody(),
+                        true
+                    );
 
                     foreach ($json as $datum) {
                         $data[] = $datum;

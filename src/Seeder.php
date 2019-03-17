@@ -21,8 +21,11 @@ class Seeder extends Injectable implements EventsAwareInterface
     public function __construct()
     {
         $di = $this->getDI();
+
         if (!($di instanceof DiInterface)) {
-            throw new Exception("A dependency injection object is required to access internal services");
+            throw new Exception(
+                "A dependency injection object is required to access internal services"
+            );
         }
     }
 
@@ -126,7 +129,9 @@ class Seeder extends Injectable implements EventsAwareInterface
             );
 
             if (!$success) {
-                throw new Exception("Table `" . $model->getSource() . "` not created.");
+                throw new Exception(
+                    "Table `" . $model->getSource() . "` not created."
+                );
             }
 
             if ($eventsManager instanceof \Phalcon\Events\ManagerInterface) {
@@ -163,7 +168,9 @@ class Seeder extends Injectable implements EventsAwareInterface
                 $success = $this->db->addIndex($model->getSource(), null, $index);
 
                 if (!$success) {
-                    throw new Exception("Index `" . $index->getName() . "` on `" . $model->getSource() . "` not created.");
+                    throw new Exception(
+                        "Index `" . $index->getName() . "` on `" . $model->getSource() . "` not created."
+                    );
                 }
             }
 
@@ -198,10 +205,16 @@ class Seeder extends Injectable implements EventsAwareInterface
             }
 
             foreach ($references as $reference) {
-                $success = $this->db->addForeignKey($model->getSource(), $reference->getSchemaName(), $reference);
+                $success = $this->db->addForeignKey(
+                    $model->getSource(),
+                    $reference->getSchemaName(),
+                    $reference
+                );
 
                 if (!$success) {
-                    throw new Exception("Reference `" . $reference->getName() . "` on `" . $model->getSource() . "` not created.");
+                    throw new Exception(
+                        "Reference `" . $reference->getName() . "` on `" . $model->getSource() . "` not created."
+                    );
                 }
             }
 
@@ -245,7 +258,9 @@ class Seeder extends Injectable implements EventsAwareInterface
                 $row->assign($datum);
 
                 if (!$row->create()) {
-                    throw new Exception("Data not created for `" . $model->getSource() . "`.");
+                    throw new Exception(
+                        "Data not created for `" . $model->getSource() . "`."
+                    );
                 }
             }
 
@@ -288,10 +303,16 @@ class Seeder extends Injectable implements EventsAwareInterface
             }
 
             foreach ($references as $reference) {
-                $success = $this->db->dropForeignKey($model->getSource(), $reference->getSchemaName(), $reference->getName());
+                $success = $this->db->dropForeignKey(
+                    $model->getSource(),
+                    $reference->getSchemaName(),
+                    $reference->getName()
+                );
 
                 if (!$success) {
-                    throw new Exception("Reference `" . $reference->getName() . "` on `" . $model->getSource() . "` not dropped.");
+                    throw new Exception(
+                        "Reference `" . $reference->getName() . "` on `" . $model->getSource() . "` not dropped."
+                    );
                 }
             }
 
@@ -330,7 +351,9 @@ class Seeder extends Injectable implements EventsAwareInterface
             $success = ($model::count() == 0);
 
             if (!$success) {
-                throw new Exception("Table `" . $model->getSource() . "` not truncated.");
+                throw new Exception(
+                    "Table `" . $model->getSource() . "` not truncated."
+                );
             }
 
             if ($eventsManager instanceof \Phalcon\Events\ManagerInterface) {
@@ -359,10 +382,14 @@ class Seeder extends Injectable implements EventsAwareInterface
                 $eventsManager->fire("seeder:beforeDropTable", $model);
             }
 
-            $success = $this->db->dropTable($model->getSource());
+            $success = $this->db->dropTable(
+                $model->getSource()
+            );
 
             if (!$success) {
-                throw new Exception("Table `" . $model->getSource() . "` not dropped.");
+                throw new Exception(
+                    "Table `" . $model->getSource() . "` not dropped."
+                );
             }
 
             if ($eventsManager instanceof \Phalcon\Events\ManagerInterface) {
