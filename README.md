@@ -24,10 +24,12 @@ Install using Composer:
 ### DI ###
 
 ```php
+use Sid\Phalcon\Seeder\Seeder;
+
 $di->set(
     "seeder",
     function () {
-        $seeder = new \Sid\Phalcon\Seeder\Seeder();
+        $seeder = new Seeder();
 
         return $seeder;
     },
@@ -42,6 +44,8 @@ Model metadata is stored in the Model class using [annotations](https://docs.pha
 Class annotations are used to store indexes, references and any initial data you want to import. Property annotations are used to store metadata about individual columns:
 
 ```php
+use Phalcon\Mvc\Model;
+
 /**
  * @Index("emailAddress", ["emailAddress"])
  *
@@ -52,7 +56,7 @@ Class annotations are used to store indexes, references and any initial data you
  *
  * @DataJson("http://my-website.com/path/to/some/data.json")
  */
-class Users extends \Phalcon\Mvc\Model
+class Users extends Model
 {
     /**
      * @Primary
@@ -98,7 +102,9 @@ $di->set(
 You'll need to pass an array of all your models. Indexes and references are handled after all the tables are created so you don't need to worry about their order. However, any models that have initial data need to be ordered so that any data it relies on already exists.
 
 ```php
-class SeederTask extends \Phalcon\Cli\Task
+use Phalcon\Cli\Task;
+
+class SeederTask extends Task
 {
     protected function getModels()
     {

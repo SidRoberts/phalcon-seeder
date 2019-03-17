@@ -2,7 +2,11 @@
 
 namespace Sid\Phalcon\Seeder;
 
-class Seeder extends \Phalcon\Di\Injectable implements \Phalcon\Events\EventsAwareInterface
+use Phalcon\DiInterface;
+use Phalcon\Di\Injectable;
+use Phalcon\Events\EventsAwareInterface;
+
+class Seeder extends Injectable implements EventsAwareInterface
 {
     /**
      * @var \Phalcon\Events\ManagerInterface
@@ -17,7 +21,7 @@ class Seeder extends \Phalcon\Di\Injectable implements \Phalcon\Events\EventsAwa
     public function __construct()
     {
         $di = $this->getDI();
-        if (!($di instanceof \Phalcon\DiInterface)) {
+        if (!($di instanceof DiInterface)) {
             throw new Exception("A dependency injection object is required to access internal services");
         }
     }

@@ -2,25 +2,32 @@
 
 namespace Sid\Phalcon\Seeder;
 
-class Annotations extends \Phalcon\Di\Injectable
+use Phalcon\Db\Column;
+use Phalcon\Db\Index;
+use Phalcon\Db\Reference;
+use Phalcon\DiInterface;
+use Phalcon\Di\Injectable;
+use Phalcon\Mvc\ModelInterface;
+
+class Annotations extends Injectable
 {
     /**
-     * @var \Phalcon\Mvc\ModelInterface
+     * @var ModelInterface
      */
     protected $model;
 
 
     /**
-     * @param \Phalcon\Mvc\ModelInterface $model
+     * @param ModelInterface $model
      *
      * @throws Exception
      */
-    public function __construct(\Phalcon\Mvc\ModelInterface $model)
+    public function __construct(ModelInterface $model)
     {
         $this->model = $model;
 
         $di = $this->getDI();
-        if (!($di instanceof \Phalcon\DiInterface)) {
+        if (!($di instanceof DiInterface)) {
             throw new Exception("A dependency injection object is required to access internal services");
         }
     }
@@ -71,7 +78,7 @@ class Annotations extends \Phalcon\Di\Injectable
                 $definition['size'] = $size;
             }
 
-            $columns[] = new \Phalcon\Db\Column($columnName, $definition);
+            $columns[] = new Column($columnName, $definition);
         }
 
         return $columns;
@@ -129,7 +136,7 @@ class Annotations extends \Phalcon\Di\Injectable
                     $columns = $arguments[1];
                     $type    = isset($arguments[2]) ? $arguments[2] : null;
 
-                    $indexes[] = new \Phalcon\Db\Index($name, $columns, $type);
+                    $indexes[] = new Index($name, $columns, $type);
                 }
             }
         }
@@ -153,7 +160,7 @@ class Annotations extends \Phalcon\Di\Injectable
                 foreach ($referenceAnnotations as $referenceAnnotation) {
                     $arguments = $referenceAnnotation->getArguments();
 
-                    $references[] = new \Phalcon\Db\Reference($arguments[0], $arguments[1]);
+                    $references[] = new Reference($arguments[0], $arguments[1]);
                 }
             }
         }
@@ -209,23 +216,23 @@ class Annotations extends \Phalcon\Di\Injectable
     protected function getColumnTypeConstant($type)
     {
         $columnTypes = [
-            "integer"    => \Phalcon\Db\Column::TYPE_INTEGER,
-            "date"       => \Phalcon\Db\Column::TYPE_DATE,
-            "varchar"    => \Phalcon\Db\Column::TYPE_VARCHAR,
-            "decimal"    => \Phalcon\Db\Column::TYPE_DECIMAL,
-            "datetime"   => \Phalcon\Db\Column::TYPE_DATETIME,
-            "char"       => \Phalcon\Db\Column::TYPE_CHAR,
-            "text"       => \Phalcon\Db\Column::TYPE_TEXT,
-            "float"      => \Phalcon\Db\Column::TYPE_FLOAT,
-            "boolean"    => \Phalcon\Db\Column::TYPE_BOOLEAN,
-            "double"     => \Phalcon\Db\Column::TYPE_DOUBLE,
-            "tinyblob"   => \Phalcon\Db\Column::TYPE_TINYBLOB,
-            "blob"       => \Phalcon\Db\Column::TYPE_BLOB,
-            "mediumblob" => \Phalcon\Db\Column::TYPE_MEDIUMBLOB,
-            "longblob"   => \Phalcon\Db\Column::TYPE_LONGBLOB,
-            "biginteger" => \Phalcon\Db\Column::TYPE_BIGINTEGER,
-            "json"       => \Phalcon\Db\Column::TYPE_JSON,
-            "jsonb"      => \Phalcon\Db\Column::TYPE_JSONB
+            "integer"    => Column::TYPE_INTEGER,
+            "date"       => Column::TYPE_DATE,
+            "varchar"    => Column::TYPE_VARCHAR,
+            "decimal"    => Column::TYPE_DECIMAL,
+            "datetime"   => Column::TYPE_DATETIME,
+            "char"       => Column::TYPE_CHAR,
+            "text"       => Column::TYPE_TEXT,
+            "float"      => Column::TYPE_FLOAT,
+            "boolean"    => Column::TYPE_BOOLEAN,
+            "double"     => Column::TYPE_DOUBLE,
+            "tinyblob"   => Column::TYPE_TINYBLOB,
+            "blob"       => Column::TYPE_BLOB,
+            "mediumblob" => Column::TYPE_MEDIUMBLOB,
+            "longblob"   => Column::TYPE_LONGBLOB,
+            "biginteger" => Column::TYPE_BIGINTEGER,
+            "json"       => Column::TYPE_JSON,
+            "jsonb"      => Column::TYPE_JSONB
         ];
 
         return $columnTypes[$type];
