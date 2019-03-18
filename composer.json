@@ -22,9 +22,9 @@
 
 
     "require": {
-        "php": ">= 5.4",
+        "php": "~7.1",
 
-        "ext-phalcon": ">= 2.0.0",
+        "ext-phalcon": "~3.0",
 
         "guzzlehttp/guzzle": "~6.0"
     },
