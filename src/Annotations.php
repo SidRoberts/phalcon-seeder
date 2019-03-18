@@ -18,8 +18,6 @@ class Annotations extends Injectable
 
 
     /**
-     * @param ModelInterface $model
-     *
      * @throws Exception
      */
     public function __construct(ModelInterface $model)
@@ -39,10 +37,7 @@ class Annotations extends Injectable
 
 
 
-    /**
-     * @return array
-     */
-    public function getColumns()
+    public function getColumns() : array
     {
         $columns = [];
 
@@ -91,10 +86,7 @@ class Annotations extends Injectable
         return $columns;
     }
 
-    /**
-     * @return array
-     */
-    public function getTableOptions()
+    public function getTableOptions() : array
     {
         $options = [];
 
@@ -123,10 +115,7 @@ class Annotations extends Injectable
         return $options;
     }
 
-    /**
-     * @return array
-     */
-    public function getIndexes()
+    public function getIndexes() : array
     {
         $indexes = [];
 
@@ -151,10 +140,7 @@ class Annotations extends Injectable
         return $indexes;
     }
 
-    /**
-     * @return array
-     */
-    public function getReferences()
+    public function getReferences() : array
     {
         $references = [];
 
@@ -178,10 +164,7 @@ class Annotations extends Injectable
         return $references;
     }
 
-    /**
-     * @return array
-     */
-    public function getInitialData()
+    public function getInitialData() : array
     {
         $data = [];
 
@@ -221,12 +204,7 @@ class Annotations extends Injectable
         return $data;
     }
 
-    /**
-     * @param string $type
-     *
-     * @return integer
-     */
-    protected function getColumnTypeConstant($type)
+    protected function getColumnTypeConstant(string $type) : int
     {
         $columnTypes = [
             "integer"    => Column::TYPE_INTEGER,
