@@ -41,7 +41,8 @@ $di->set(
 
 Model metadata is stored in the Model class using [annotations](https://docs.phalconphp.com/en/latest/reference/annotations.html).
 
-Class annotations are used to store indexes, references and any initial data you want to import. Property annotations are used to store metadata about individual columns:
+Class annotations are used to store indexes, references and any initial data you want to import.
+Property annotations are used to store metadata about individual columns:
 
 ```php
 use Phalcon\Mvc\Model;
@@ -79,7 +80,8 @@ class Users extends Model
 
 Indexes and references use the same format as creating [`Phalcon\Db\Index`](https://docs.phalconphp.com/en/latest/api/Phalcon_Db_Index.html) and [`Phalcon\Db\Reference`](https://docs.phalconphp.com/en/latest/api/Phalcon_Db_Reference.html) instances.
 
-Property annotations use the same format as the [annotations metadata strategy](https://docs.phalconphp.com/en/latest/reference/models-metadata.html#annotations-strategy). As such it may be useful to use the annotations strategy for the models metadata in your DI:
+Property annotations use the same format as the [annotations metadata strategy](https://docs.phalconphp.com/en/latest/reference/models-metadata.html#annotations-strategy).
+As such it may be useful to use the annotations strategy for the models metadata in your DI:
 
 ```php
 $di->set(
@@ -99,7 +101,9 @@ $di->set(
 
 ### Task ###
 
-You'll need to pass an array of all your models. Indexes and references are handled after all the tables are created so you don't need to worry about their order. However, any models that have initial data need to be ordered so that any data it relies on already exists.
+You'll need to pass an array of all your models.
+Indexes and references are handled after all the tables are created so you don't need to worry about their order.
+However, any models that have initial data need to be ordered so that any data it relies on already exists.
 
 ```php
 use Phalcon\Cli\Task;
