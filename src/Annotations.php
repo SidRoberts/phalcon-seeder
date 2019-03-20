@@ -41,9 +41,9 @@ class Annotations extends Injectable
     {
         $columns = [];
 
-        $propertiesAnnotations = $this->annotations->getProperties(
-            get_class($this->model)
-        );
+        $modelClass = get_class($this->model);
+
+        $propertiesAnnotations = $this->annotations->getProperties($modelClass);
 
         foreach ($propertiesAnnotations as $property => $propertyAnnotations) {
             if (!$propertyAnnotations->has('Column')) {
@@ -90,7 +90,7 @@ class Annotations extends Injectable
     {
         $options = [];
 
-        $classAnnotations = $this->annotations->get(get_class($this->model))->getClassAnnotations();
+        $classAnnotations = $this->getClassAnnotations();
 
         if ($classAnnotations) {
             if ($classAnnotations->has("Engine")) {
@@ -119,7 +119,7 @@ class Annotations extends Injectable
     {
         $indexes = [];
 
-        $classAnnotations = $this->annotations->get(get_class($this->model))->getClassAnnotations();
+        $classAnnotations = $this->getClassAnnotations();
 
         if ($classAnnotations) {
             if ($classAnnotations->has("Index")) {
@@ -144,7 +144,7 @@ class Annotations extends Injectable
     {
         $references = [];
 
-        $classAnnotations = $this->annotations->get(get_class($this->model))->getClassAnnotations();
+        $classAnnotations = $this->getClassAnnotations();
 
         if ($classAnnotations) {
             if ($classAnnotations->has("Reference")) {
@@ -168,7 +168,7 @@ class Annotations extends Injectable
     {
         $data = [];
 
-        $classAnnotations = $this->annotations->get(get_class($this->model))->getClassAnnotations();
+        $classAnnotations = $this->getClassAnnotations();
 
         if ($classAnnotations) {
             if ($classAnnotations->has("Data")) {
@@ -227,5 +227,14 @@ class Annotations extends Injectable
         ];
 
         return $columnTypes[$type];
+    }
+
+    protected function getClassAnnotations()
+    {
+        $modelClass = get_class($this->model);
+
+        $classAnnotations = $this->annotations->get($modelClass)->getClassAnnotations();
+
+        return $classAnnotations;
     }
 }

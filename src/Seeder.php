@@ -107,8 +107,10 @@ class Seeder extends Injectable implements EventsAwareInterface
 
             $modelAnnotations = new \Sid\Phalcon\Seeder\Annotations($model);
 
+            $source = $model->getSource();
+
             $success = $this->db->createTable(
-                $model->getSource(),
+                $source,
                 null,
                 [
                     "columns" => $modelAnnotations->getColumns(),
@@ -118,7 +120,10 @@ class Seeder extends Injectable implements EventsAwareInterface
 
             if (!$success) {
                 throw new Exception(
-                    "Table `" . $model->getSource() . "` not created."
+                    sprintf(
+                        "Table `%s` not created.",
+                        $source
+                    )
                 );
             }
 
@@ -146,16 +151,24 @@ class Seeder extends Injectable implements EventsAwareInterface
 
 
 
+            $source = $model->getSource();
+
+
+
             if ($eventsManager instanceof \Phalcon\Events\ManagerInterface) {
                 $eventsManager->fire("seeder:beforeCreateModelIndexes", $model);
             }
 
             foreach ($indexes as $index) {
-                $success = $this->db->addIndex($model->getSource(), null, $index);
+                $success = $this->db->addIndex($source, null, $index);
 
                 if (!$success) {
                     throw new Exception(
-                        "Index `" . $index->getName() . "` on `" . $model->getSource() . "` not created."
+                        sprintf(
+                            "Index `%s` on `%s` not created.",
+                            $index->getName(),
+                            $source
+                        )
                     );
                 }
             }
@@ -184,20 +197,28 @@ class Seeder extends Injectable implements EventsAwareInterface
 
 
 
+            $source = $model->getSource();
+
+
+
             if ($eventsManager instanceof \Phalcon\Events\ManagerInterface) {
                 $eventsManager->fire("seeder:beforeCreateModelReferences", $model);
             }
 
             foreach ($references as $reference) {
                 $success = $this->db->addForeignKey(
-                    $model->getSource(),
+                    $source,
                     $reference->getSchemaName(),
                     $reference
                 );
 
                 if (!$success) {
                     throw new Exception(
-                        "Reference `" . $reference->getName() . "` on `" . $model->getSource() . "` not created."
+                        sprintf(
+                            "Reference `%s` on `%s` not created.",
+                            $reference->getName(),
+                            $source
+                        )
                     );
                 }
             }
@@ -241,7 +262,10 @@ class Seeder extends Injectable implements EventsAwareInterface
 
                 if (!$row->create()) {
                     throw new Exception(
-                        "Data not created for `" . $model->getSource() . "`."
+                        sprintf(
+                            "Data not created for `%s`.",
+                            $model->getSource()
+                        )
                     );
                 }
             }
@@ -262,7 +286,11 @@ class Seeder extends Injectable implements EventsAwareInterface
         $eventsManager = $this->getEventsManager();
 
         foreach ($models as $model) {
-            if (!$this->db->tableExists($model->getSource())) {
+            $source = $model->getSource();
+
+
+
+            if (!$this->db->tableExists($source)) {
                 continue;
             }
 
@@ -284,14 +312,18 @@ class Seeder extends Injectable implements EventsAwareInterface
 
             foreach ($references as $reference) {
                 $success = $this->db->dropForeignKey(
-                    $model->getSource(),
+                    $source,
                     $reference->getSchemaName(),
                     $reference->getName()
                 );
 
                 if (!$success) {
                     throw new Exception(
-                        "Reference `" . $reference->getName() . "` on `" . $model->getSource() . "` not dropped."
+                        sprintf(
+                            "Reference `%s` on `%s` not dropped.",
+                            $reference->getName(),
+                            $source
+                        )
                     );
                 }
             }
@@ -310,7 +342,11 @@ class Seeder extends Injectable implements EventsAwareInterface
         $eventsManager = $this->getEventsManager();
 
         foreach ($models as $model) {
-            if (!$this->db->tableExists($model->getSource())) {
+            $source = $model->getSource();
+
+
+
+            if (!$this->db->tableExists($source)) {
                 continue;
             }
 
@@ -330,7 +366,10 @@ class Seeder extends Injectable implements EventsAwareInterface
 
             if (!$success) {
                 throw new Exception(
-                    "Table `" . $model->getSource() . "` not truncated."
+                    sprintf(
+                        "Table `%s` not truncated.",
+                        $source
+                    )
                 );
             }
 
@@ -348,7 +387,11 @@ class Seeder extends Injectable implements EventsAwareInterface
         $eventsManager = $this->getEventsManager();
 
         foreach ($models as $model) {
-            if (!$this->db->tableExists($model->getSource())) {
+            $source = $model->getSource();
+
+
+
+            if (!$this->db->tableExists($source)) {
                 continue;
             }
 
@@ -359,12 +402,15 @@ class Seeder extends Injectable implements EventsAwareInterface
             }
 
             $success = $this->db->dropTable(
-                $model->getSource()
+                $source
             );
 
             if (!$success) {
                 throw new Exception(
-                    "Table `" . $model->getSource() . "` not dropped."
+                    sprintf(
+                        "Table `%s` not dropped.",
+                        $source
+                    )
                 );
             }
 
