@@ -14,16 +14,12 @@ Database seeder component for Phalcon.
 
 
 
-## Installing ##
+## Installing
 
 Install using Composer:
 
-```json
-{
-    "require": {
-        "sidroberts/phalcon-seeder": "dev-master"
-    }
-}
+```bash
+composer require sidroberts/phalcon-seeder:1.0.x-dev
 ```
 
 
