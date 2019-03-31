@@ -89,28 +89,32 @@ class Annotations extends Injectable
 
     public function getTableOptions() : array
     {
-        $options = [];
-
         $classAnnotations = $this->getClassAnnotations();
 
-        if ($classAnnotations) {
-            if ($classAnnotations->has("Engine")) {
-                $engineAnnotation = $classAnnotations->get("Engine");
+        if (!$classAnnotations) {
+            return [];
+        }
 
-                $options["ENGINE"] = $engineAnnotation->getArgument(0);
-            }
 
-            if ($classAnnotations->has("AutoIncrement")) {
-                $autoIncrementAnnotation = $classAnnotations->get("AutoIncrement");
 
-                $options["AUTO_INCREMENT"] = $autoIncrementAnnotation->getArgument(0);
-            }
+        $options = [];
 
-            if ($classAnnotations->has("Collation")) {
-                $collationAnnotation = $classAnnotations->get("Collation");
+        if ($classAnnotations->has("Engine")) {
+            $engineAnnotation = $classAnnotations->get("Engine");
 
-                $options["TABLE_COLLATION"] = $collationAnnotation->getArgument(0);
-            }
+            $options["ENGINE"] = $engineAnnotation->getArgument(0);
+        }
+
+        if ($classAnnotations->has("AutoIncrement")) {
+            $autoIncrementAnnotation = $classAnnotations->get("AutoIncrement");
+
+            $options["AUTO_INCREMENT"] = $autoIncrementAnnotation->getArgument(0);
+        }
+
+        if ($classAnnotations->has("Collation")) {
+            $collationAnnotation = $classAnnotations->get("Collation");
+
+            $options["TABLE_COLLATION"] = $collationAnnotation->getArgument(0);
         }
 
         return $options;
@@ -118,24 +122,26 @@ class Annotations extends Injectable
 
     public function getIndexes() : array
     {
-        $indexes = [];
-
         $classAnnotations = $this->getClassAnnotations();
 
-        if ($classAnnotations) {
-            if ($classAnnotations->has("Index")) {
-                $indexAnnotations = $classAnnotations->getAll("Index");
+        if (!$classAnnotations || !$classAnnotations->has("Index")) {
+            return [];
+        }
 
-                foreach ($indexAnnotations as $indexAnnotation) {
-                    $arguments = $indexAnnotation->getArguments();
 
-                    $name    = $arguments[0];
-                    $columns = $arguments[1];
-                    $type    = $arguments[2] ?? null;
 
-                    $indexes[] = new Index($name, $columns, $type);
-                }
-            }
+        $indexes = [];
+
+        $indexAnnotations = $classAnnotations->getAll("Index");
+
+        foreach ($indexAnnotations as $indexAnnotation) {
+            $arguments = $indexAnnotation->getArguments();
+
+            $name    = $arguments[0];
+            $columns = $arguments[1];
+            $type    = $arguments[2] ?? null;
+
+            $indexes[] = new Index($name, $columns, $type);
         }
 
         return $indexes;
@@ -143,23 +149,25 @@ class Annotations extends Injectable
 
     public function getReferences() : array
     {
-        $references = [];
-
         $classAnnotations = $this->getClassAnnotations();
 
-        if ($classAnnotations) {
-            if ($classAnnotations->has("Reference")) {
-                $referenceAnnotations = $classAnnotations->getAll("Reference");
+        if (!$classAnnotations || !$classAnnotations->has("Reference")) {
+            return [];
+        }
 
-                foreach ($referenceAnnotations as $referenceAnnotation) {
-                    $arguments = $referenceAnnotation->getArguments();
 
-                    $references[] = new Reference(
-                        $arguments[0],
-                        $arguments[1]
-                    );
-                }
-            }
+
+        $references = [];
+
+        $referenceAnnotations = $classAnnotations->getAll("Reference");
+
+        foreach ($referenceAnnotations as $referenceAnnotation) {
+            $arguments = $referenceAnnotation->getArguments();
+
+            $references[] = new Reference(
+                $arguments[0],
+                $arguments[1]
+            );
         }
 
         return $references;
@@ -167,37 +175,41 @@ class Annotations extends Injectable
 
     public function getInitialData() : array
     {
-        $data = [];
-
         $classAnnotations = $this->getClassAnnotations();
 
-        if ($classAnnotations) {
-            if ($classAnnotations->has("Data")) {
-                $dataAnnotations = $classAnnotations->getAll("Data");
+        if (!$classAnnotations) {
+            return [];
+        }
 
-                foreach ($dataAnnotations as $dataAnnotation) {
-                    $data[] = $dataAnnotation->getArgument(0);
-                }
+
+
+        $data = [];
+
+        if ($classAnnotations->has("Data")) {
+            $dataAnnotations = $classAnnotations->getAll("Data");
+
+            foreach ($dataAnnotations as $dataAnnotation) {
+                $data[] = $dataAnnotation->getArgument(0);
             }
+        }
 
-            if ($classAnnotations->has("DataJson")) {
-                $guzzle = new \GuzzleHttp\Client();
+        if ($classAnnotations->has("DataJson")) {
+            $guzzle = new \GuzzleHttp\Client();
 
-                $dataJsonAnnotations = $classAnnotations->getAll("DataJson");
+            $dataJsonAnnotations = $classAnnotations->getAll("DataJson");
 
-                foreach ($dataJsonAnnotations as $dataJsonAnnotation) {
-                    $url = $dataJsonAnnotation->getArgument(0);
+            foreach ($dataJsonAnnotations as $dataJsonAnnotation) {
+                $url = $dataJsonAnnotation->getArgument(0);
 
-                    $response = $guzzle->get($url);
+                $response = $guzzle->get($url);
 
-                    $json = json_decode(
-                        $response->getBody(),
-                        true
-                    );
+                $json = json_decode(
+                    $response->getBody(),
+                    true
+                );
 
-                    foreach ($json as $datum) {
-                        $data[] = $datum;
-                    }
+                foreach ($json as $datum) {
+                    $data[] = $datum;
                 }
             }
         }

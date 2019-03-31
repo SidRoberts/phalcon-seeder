@@ -437,7 +437,9 @@ class Seeder extends Injectable implements EventsAwareInterface
         $modelsWaitingToBeSorted = [];
 
         foreach ($models as $model) {
-            $modelsWaitingToBeSorted[$model->getSource()] = $model;
+            $source = $model->getSource();
+
+            $modelsWaitingToBeSorted[$source] = $model;
         }
 
         $newOrder = [];
