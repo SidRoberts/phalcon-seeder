@@ -1,0 +1,26 @@
+language: php
+
+php:
+  - 7.1
+
+sudo: true
+
+env:
+  - PHALCON_VERSION="v3.4.1"
+
+git:
+  depth: 1
+
+install:
+  - git clone --depth=1 -q --branch=${PHALCON_VERSION} https://github.com/phalcon/cphalcon.git
+  - '(cd cphalcon/build; bash install &>/dev/null && phpenv config-add ../tests/_ci/phalcon.ini &> /dev/null && cd ../..;)'
+  - php --ri phalcon
+  - travis_retry composer update --no-interaction --no-progress
+
+script:
+  - vendor/bin/codecept run
+  - vendor/bin/phpcs src/ --standard=psr2
+
+notifications:
+  email:
+    - sid@sidroberts.co.uk
