@@ -47,14 +47,14 @@ class Annotations extends Injectable
         $propertiesAnnotations = $this->annotations->getProperties($modelClass);
 
         foreach ($propertiesAnnotations as $property => $propertyAnnotations) {
-            if (!$propertyAnnotations->has('Column')) {
+            if (!$propertyAnnotations->has("Column")) {
                 continue;
             }
 
             $definition = [];
 
-            $definition['primary']       = $propertyAnnotations->has("Primary");
-            $definition['autoIncrement'] = $propertyAnnotations->has("Identity");
+            $definition["primary"]       = $propertyAnnotations->has("Primary");
+            $definition["autoIncrement"] = $propertyAnnotations->has("Identity");
 
             $columnAnnotation = $propertyAnnotations->get("Column");
 
@@ -64,11 +64,11 @@ class Annotations extends Injectable
             }
 
             $type = $columnAnnotation->getNamedParameter("type");
-            $definition['type'] = $this->getColumnTypeConstant($type);
+            $definition["type"] = $this->getColumnTypeConstant($type);
 
             $nullable = $columnAnnotation->getNamedParameter("nullable");
             if ($nullable !== null) {
-                $definition['notNull'] = !$nullable;
+                $definition["notNull"] = !$nullable;
             }
 
             $default = $columnAnnotation->getNamedParameter("default");
@@ -78,7 +78,7 @@ class Annotations extends Injectable
 
             $size = $columnAnnotation->getNamedParameter("size");
             if ($size !== null) {
-                $definition['size'] = $size;
+                $definition["size"] = $size;
             }
 
             $columns[] = new Column($columnName, $definition);
