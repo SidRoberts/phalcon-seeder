@@ -11,7 +11,7 @@ class Seeder extends Injectable implements EventsAwareInterface
     /**
      * @var \Phalcon\Events\ManagerInterface
      */
-    protected $_eventsManager;
+    protected $eventsManager;
 
 
 
@@ -33,12 +33,12 @@ class Seeder extends Injectable implements EventsAwareInterface
 
     public function getEventsManager() : \Phalcon\Events\ManagerInterface
     {
-        return $this->_eventsManager;
+        return $this->eventsManager;
     }
 
     public function setEventsManager(\Phalcon\Events\ManagerInterface $eventsManager)
     {
-        $this->_eventsManager = $eventsManager;
+        $this->eventsManager = $eventsManager;
     }
 
 

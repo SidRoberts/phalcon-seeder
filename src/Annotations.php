@@ -17,6 +17,7 @@ class Annotations extends Injectable
     protected $model;
 
 
+
     /**
      * @throws Exception
      */
