@@ -131,7 +131,7 @@ class Annotations extends Injectable
 
                     $name    = $arguments[0];
                     $columns = $arguments[1];
-                    $type    = isset($arguments[2]) ? $arguments[2] : null;
+                    $type    = $arguments[2] ?? null;
 
                     $indexes[] = new Index($name, $columns, $type);
                 }
