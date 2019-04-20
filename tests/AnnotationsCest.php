@@ -1,15 +1,13 @@
 <?php
 
-namespace Sid\Phalcon\Seeder\Tests;
+namespace Tests;
 
-use Codeception\TestCase\Test;
 use Phalcon\Db\Column;
 use Phalcon\Db\Index;
 use Phalcon\Di;
 use Sid\Phalcon\Seeder\Annotations;
-use Users;
 
-class AnnotationsTest extends Test
+class AnnotationsCest
 {
     public function _before()
     {
@@ -20,7 +18,7 @@ class AnnotationsTest extends Test
 
 
 
-    public function testGetColumns()
+    public function getColumns(UnitTester $I)
     {
         $user = new Users();
 
@@ -28,7 +26,7 @@ class AnnotationsTest extends Test
 
         $columns = $annotations->getColumns();
 
-        $this->assertCount(
+        $I->assertCount(
             3,
             $columns
         );
@@ -37,24 +35,24 @@ class AnnotationsTest extends Test
 
         $userIdColumn = $columns[0];
 
-        $this->assertEquals(
+        $I->assertEquals(
             "userID",
             $userIdColumn->getName()
         );
 
-        $this->assertTrue(
+        $I->assertTrue(
             $userIdColumn->isPrimary()
         );
 
-        $this->assertTrue(
+        $I->assertTrue(
             $userIdColumn->isNotNull()
         );
 
-        $this->assertTrue(
+        $I->assertTrue(
             $userIdColumn->isAutoIncrement()
         );
 
-        $this->assertEquals(
+        $I->assertEquals(
             Column::TYPE_BIGINTEGER,
             $userIdColumn->getType()
         );
@@ -63,29 +61,29 @@ class AnnotationsTest extends Test
 
         $emailAddressColumn = $columns[1];
 
-        $this->assertEquals(
+        $I->assertEquals(
             "emailAddress",
             $emailAddressColumn->getName()
         );
 
-        $this->assertFalse(
+        $I->assertFalse(
             $emailAddressColumn->isPrimary()
         );
 
-        $this->assertTrue(
+        $I->assertTrue(
             $emailAddressColumn->isNotNull()
         );
 
-        $this->assertFalse(
+        $I->assertFalse(
             $emailAddressColumn->isAutoIncrement()
         );
 
-        $this->assertEquals(
+        $I->assertEquals(
             255,
             $emailAddressColumn->getSize()
         );
 
-        $this->assertEquals(
+        $I->assertEquals(
             Column::TYPE_VARCHAR,
             $emailAddressColumn->getType()
         );
@@ -94,29 +92,29 @@ class AnnotationsTest extends Test
 
         $passwordColumn = $columns[2];
 
-        $this->assertEquals(
+        $I->assertEquals(
             "password",
             $passwordColumn->getName()
         );
 
-        $this->assertFalse(
+        $I->assertFalse(
             $passwordColumn->isPrimary()
         );
 
-        $this->assertTrue(
+        $I->assertTrue(
             $passwordColumn->isNotNull()
         );
 
-        $this->assertFalse(
+        $I->assertFalse(
             $passwordColumn->isAutoIncrement()
         );
 
-        $this->assertEquals(
+        $I->assertEquals(
             100,
             $passwordColumn->getSize()
         );
 
-        $this->assertEquals(
+        $I->assertEquals(
             Column::TYPE_VARCHAR,
             $passwordColumn->getType()
         );
@@ -124,7 +122,7 @@ class AnnotationsTest extends Test
 
 
 
-    public function testGetIndexes()
+    public function getIndexes(UnitTester $I)
     {
         $user = new Users();
 
@@ -132,19 +130,19 @@ class AnnotationsTest extends Test
 
         $indexes = $annotations->getIndexes();
 
-        $this->assertCount(
+        $I->assertCount(
             1,
             $indexes
         );
 
         $index = $indexes[0];
 
-        $this->assertEquals(
+        $I->assertEquals(
             "emailAddress",
             $index->getName()
         );
 
-        $this->assertEquals(
+        $I->assertEquals(
             [
                 "emailAddress",
             ],
@@ -154,7 +152,7 @@ class AnnotationsTest extends Test
 
 
 
-    public function testGetReferences()
+    public function getReferences(UnitTester $I)
     {
         $user = new Users();
 
@@ -162,31 +160,31 @@ class AnnotationsTest extends Test
 
         $references = $annotations->getReferences();
 
-        $this->assertCount(
+        $I->assertCount(
             1,
             $references
         );
 
         $reference = $references[0];
 
-        $this->assertEquals(
+        $I->assertEquals(
             "Users_userID",
             $reference->getName()
         );
 
-        $this->assertEquals(
+        $I->assertEquals(
             "Posts",
             $reference->getReferencedTable()
         );
 
-        $this->assertEquals(
+        $I->assertEquals(
             [
                 "userID",
             ],
             $reference->getColumns()
         );
 
-        $this->assertEquals(
+        $I->assertEquals(
             [
                 "userID",
             ],
@@ -196,7 +194,7 @@ class AnnotationsTest extends Test
 
 
 
-    public function testGetInitialData()
+    public function getInitialData(UnitTester $I)
     {
         $user = new Users();
 
@@ -204,25 +202,31 @@ class AnnotationsTest extends Test
 
         $initialData = $annotations->getInitialData();
 
-        $this->assertCount(
+
+
+        $I->assertCount(
             2,
             $initialData
         );
 
-        $this->assertEquals(
-            [
-                [
-                    "userID"       => 1,
-                    "emailAddress" => "sid1@sidroberts.co.uk",
-                    "password"     => "S3CR3T",
-                ],
 
-                [
-                    "userID"       => 2,
-                    "emailAddress" => "sid2@sidroberts.co.uk",
-                    "password"     => "P4SSW0RD",
-                ],
+
+        $expected = [
+            [
+                "userID"       => 1,
+                "emailAddress" => "sid1@sidroberts.co.uk",
+                "password"     => "S3CR3T",
             ],
+
+            [
+                "userID"       => 2,
+                "emailAddress" => "sid2@sidroberts.co.uk",
+                "password"     => "P4SSW0RD",
+            ],
+        ];
+
+        $I->assertEquals(
+            $expected,
             $initialData
         );
     }
