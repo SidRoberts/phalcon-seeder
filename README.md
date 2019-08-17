@@ -1,5 +1,4 @@
-Sid\Phalcon\Seeder
-==================
+# `Sid\Phalcon\Seeder`
 
 Database seeder component for Phalcon.
 
