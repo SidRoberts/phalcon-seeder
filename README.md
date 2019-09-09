@@ -17,7 +17,7 @@ Database seeder component for Phalcon.
 Install using Composer:
 
 ```bash
-composer require sidroberts/phalcon-seeder:1.0.x-dev
+composer require sidroberts/phalcon-seeder
 ```
 
 
