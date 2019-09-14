@@ -114,7 +114,7 @@ class Seeder extends Injectable implements EventsAwareInterface
                 null,
                 [
                     "columns" => $modelAnnotations->getColumns(),
-                    "options" => $modelAnnotations->getTableOptions()
+                    "options" => $modelAnnotations->getTableOptions(),
                 ]
             );
 

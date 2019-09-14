@@ -236,7 +236,7 @@ class Annotations extends Injectable
             "longblob"   => Column::TYPE_LONGBLOB,
             "biginteger" => Column::TYPE_BIGINTEGER,
             "json"       => Column::TYPE_JSON,
-            "jsonb"      => Column::TYPE_JSONB
+            "jsonb"      => Column::TYPE_JSONB,
         ];
 
         return $columnTypes[$type];
