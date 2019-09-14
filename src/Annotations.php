@@ -5,8 +5,8 @@ namespace Sid\Phalcon\Seeder;
 use Phalcon\Db\Column;
 use Phalcon\Db\Index;
 use Phalcon\Db\Reference;
-use Phalcon\DiInterface;
 use Phalcon\Di\Injectable;
+use Phalcon\DiInterface;
 use Phalcon\Mvc\ModelInterface;
 
 class Annotations extends Injectable

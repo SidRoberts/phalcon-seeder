@@ -3,7 +3,6 @@
 namespace Tests;
 
 use Phalcon\Db\Column;
-use Phalcon\Db\Index;
 use Phalcon\Di;
 use Sid\Phalcon\Seeder\Annotations;
 
