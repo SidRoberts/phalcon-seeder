@@ -6,7 +6,7 @@ use Phalcon\Db\Column;
 use Phalcon\Db\Index;
 use Phalcon\Db\Reference;
 use Phalcon\Di\Injectable;
-use Phalcon\DiInterface;
+use Phalcon\Di\DiInterface;
 use Phalcon\Mvc\ModelInterface;
 
 class Annotations extends Injectable
@@ -137,9 +137,9 @@ class Annotations extends Injectable
         foreach ($indexAnnotations as $indexAnnotation) {
             $arguments = $indexAnnotation->getArguments();
 
-            $name    = $arguments[0];
+            $name    = (string) $arguments[0];
             $columns = $arguments[1];
-            $type    = $arguments[2] ?? null;
+            $type    = (string) ($arguments[2] ?? "");
 
             $indexes[] = new Index($name, $columns, $type);
         }
@@ -164,10 +164,10 @@ class Annotations extends Injectable
         foreach ($referenceAnnotations as $referenceAnnotation) {
             $arguments = $referenceAnnotation->getArguments();
 
-            $references[] = new Reference(
-                $arguments[0],
-                $arguments[1]
-            );
+            $name       = (string) $arguments[0];
+            $definition = $arguments[1];
+
+            $references[] = new Reference($name, $definition);
         }
 
         return $references;

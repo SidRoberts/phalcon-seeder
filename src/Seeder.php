@@ -3,7 +3,7 @@
 namespace Sid\Phalcon\Seeder;
 
 use Phalcon\Di\Injectable;
-use Phalcon\DiInterface;
+use Phalcon\Di\DiInterface;
 use Phalcon\Events\EventsAwareInterface;
 
 class Seeder extends Injectable implements EventsAwareInterface
