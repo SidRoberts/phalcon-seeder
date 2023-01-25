@@ -2,6 +2,7 @@
 
 namespace Sid\Phalcon\Seeder;
 
+use Phalcon\Annotations\Collection;
 use Phalcon\Db\Column;
 use Phalcon\Db\Index;
 use Phalcon\Db\Reference;
@@ -11,10 +12,7 @@ use Phalcon\Mvc\ModelInterface;
 
 class Annotations extends Injectable
 {
-    /**
-     * @var ModelInterface
-     */
-    protected $model;
+    protected ModelInterface $model;
 
 
 
@@ -38,7 +36,7 @@ class Annotations extends Injectable
 
 
 
-    public function getColumns() : array
+    public function getColumns(): array
     {
         $columns = [];
 
@@ -87,7 +85,7 @@ class Annotations extends Injectable
         return $columns;
     }
 
-    public function getTableOptions() : array
+    public function getTableOptions(): array
     {
         $classAnnotations = $this->getClassAnnotations();
 
@@ -120,7 +118,7 @@ class Annotations extends Injectable
         return $options;
     }
 
-    public function getIndexes() : array
+    public function getIndexes(): array
     {
         $classAnnotations = $this->getClassAnnotations();
 
@@ -147,7 +145,7 @@ class Annotations extends Injectable
         return $indexes;
     }
 
-    public function getReferences() : array
+    public function getReferences(): array
     {
         $classAnnotations = $this->getClassAnnotations();
 
@@ -173,7 +171,7 @@ class Annotations extends Injectable
         return $references;
     }
 
-    public function getInitialData() : array
+    public function getInitialData(): array
     {
         $classAnnotations = $this->getClassAnnotations();
 
@@ -217,7 +215,7 @@ class Annotations extends Injectable
         return $data;
     }
 
-    protected function getColumnTypeConstant(string $type) : int
+    protected function getColumnTypeConstant(string $type): int
     {
         $columnTypes = [
             "integer"    => Column::TYPE_INTEGER,
@@ -242,7 +240,7 @@ class Annotations extends Injectable
         return $columnTypes[$type];
     }
 
-    protected function getClassAnnotations()
+    protected function getClassAnnotations(): Collection|null
     {
         $modelClass = get_class($this->model);
 

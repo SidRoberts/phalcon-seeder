@@ -4,13 +4,18 @@ namespace Tests\Unit;
 
 use Phalcon\Db\Column;
 use Phalcon\Di\Di;
+use Phalcon\Di\DiInterface;
 use Sid\Phalcon\Seeder\Annotations;
 use Tests\Support\UnitTester;
 use Tests\Support\Users;
 
 class AnnotationsCest
 {
-    public function _before()
+    protected DiInterface $di;
+
+
+
+    public function _before(): void
     {
         Di::reset();
 
@@ -19,7 +24,7 @@ class AnnotationsCest
 
 
 
-    public function getColumns(UnitTester $I)
+    public function getColumns(UnitTester $I): void
     {
         $user = new Users();
 
@@ -123,7 +128,7 @@ class AnnotationsCest
 
 
 
-    public function getIndexes(UnitTester $I)
+    public function getIndexes(UnitTester $I): void
     {
         $user = new Users();
 
@@ -153,7 +158,7 @@ class AnnotationsCest
 
 
 
-    public function getReferences(UnitTester $I)
+    public function getReferences(UnitTester $I): void
     {
         $user = new Users();
 
@@ -195,7 +200,7 @@ class AnnotationsCest
 
 
 
-    public function getInitialData(UnitTester $I)
+    public function getInitialData(UnitTester $I): void
     {
         $user = new Users();
 

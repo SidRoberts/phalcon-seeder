@@ -31,7 +31,7 @@ class Seeder extends Injectable implements EventsAwareInterface
 
 
 
-    public function getEventsManager() : \Phalcon\Events\ManagerInterface
+    public function getEventsManager(): \Phalcon\Events\ManagerInterface
     {
         return $this->eventsManager;
     }
@@ -46,7 +46,7 @@ class Seeder extends Injectable implements EventsAwareInterface
     /**
      * @throws \Exception
      */
-    public function seed(array $models)
+    public function seed(array $models): void
     {
         try {
             $this->db->begin();
@@ -72,7 +72,7 @@ class Seeder extends Injectable implements EventsAwareInterface
     /**
      * @throws \Exception
      */
-    public function drop(array $models)
+    public function drop(array $models): void
     {
         try {
             $this->db->begin();
@@ -96,7 +96,7 @@ class Seeder extends Injectable implements EventsAwareInterface
     /**
      * @throws Exception
      */
-    protected function createTables(array $models)
+    protected function createTables(array $models): void
     {
         $eventsManager = $this->getEventsManager();
 
@@ -136,7 +136,7 @@ class Seeder extends Injectable implements EventsAwareInterface
     /**
      * @throws Exception
      */
-    protected function createModelIndexes(array $models)
+    protected function createModelIndexes(array $models): void
     {
         $eventsManager = $this->getEventsManager();
 
@@ -182,7 +182,7 @@ class Seeder extends Injectable implements EventsAwareInterface
     /**
      * @throws Exception
      */
-    protected function createModelReferences(array $models)
+    protected function createModelReferences(array $models): void
     {
         $eventsManager = $this->getEventsManager();
 
@@ -232,7 +232,7 @@ class Seeder extends Injectable implements EventsAwareInterface
     /**
      * @throws Exception
      */
-    protected function createModelData(array $models)
+    protected function createModelData(array $models): void
     {
         $eventsManager = $this->getEventsManager();
 
@@ -281,7 +281,7 @@ class Seeder extends Injectable implements EventsAwareInterface
     /**
      * @throws Exception
      */
-    protected function dropModelReferences(array $models)
+    protected function dropModelReferences(array $models): void
     {
         $eventsManager = $this->getEventsManager();
 
@@ -337,7 +337,7 @@ class Seeder extends Injectable implements EventsAwareInterface
     /**
      * @throws Exception
      */
-    protected function truncateTables(array $models)
+    protected function truncateTables(array $models): void
     {
         $eventsManager = $this->getEventsManager();
 
@@ -382,7 +382,7 @@ class Seeder extends Injectable implements EventsAwareInterface
     /**
      * @throws Exception
      */
-    protected function dropTables(array $models)
+    protected function dropTables(array $models): void
     {
         $eventsManager = $this->getEventsManager();
 
@@ -432,7 +432,7 @@ class Seeder extends Injectable implements EventsAwareInterface
      * This method sorts the models in an order that ensures that models come
      * after any other models they depend on.
      */
-    protected function orderForSeedingInitialData(array $models) : array
+    protected function orderForSeedingInitialData(array $models): array
     {
         $modelsWaitingToBeSorted = [];
 
