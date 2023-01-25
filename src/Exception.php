@@ -2,7 +2,7 @@
 
 namespace Sid\Phalcon\Seeder;
 
-class Exception extends \Phalcon\Exception
+class Exception extends \Exception
 {
 
 }

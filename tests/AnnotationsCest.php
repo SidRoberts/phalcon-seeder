@@ -3,7 +3,7 @@
 namespace Tests;
 
 use Phalcon\Db\Column;
-use Phalcon\Di;
+use Phalcon\Di\Di;
 use Sid\Phalcon\Seeder\Annotations;
 
 class AnnotationsCest
