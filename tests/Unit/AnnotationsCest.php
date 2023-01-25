@@ -1,10 +1,12 @@
 <?php
 
-namespace Tests;
+namespace Tests\Unit;
 
 use Phalcon\Db\Column;
 use Phalcon\Di\Di;
 use Sid\Phalcon\Seeder\Annotations;
+use Tests\Support\UnitTester;
+use Tests\Support\Users;
 
 class AnnotationsCest
 {
