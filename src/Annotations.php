@@ -2,6 +2,7 @@
 
 namespace Sid\Phalcon\Seeder;
 
+use GuzzleHttp\Client as GuzzleClient;
 use Phalcon\Annotations\Collection;
 use Phalcon\Db\Column;
 use Phalcon\Db\Index;
@@ -192,7 +193,7 @@ class Annotations extends Injectable
         }
 
         if ($classAnnotations->has("DataJson")) {
-            $guzzle = new \GuzzleHttp\Client();
+            $guzzle = new GuzzleClient();
 
             $dataJsonAnnotations = $classAnnotations->getAll("DataJson");
 

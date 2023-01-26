@@ -5,11 +5,13 @@ namespace Sid\Phalcon\Seeder;
 use Phalcon\Di\Injectable;
 use Phalcon\Di\DiInterface;
 use Phalcon\Events\EventsAwareInterface;
+use Phalcon\Events\ManagerInterface as EventsManagerInterface;
+use Sid\Phalcon\Seeder\Annotations as SeederAnnotations;
 
 class Seeder extends Injectable implements EventsAwareInterface
 {
     /**
-     * @var \Phalcon\Events\ManagerInterface
+     * @var EventsManagerInterface
      */
     protected $eventsManager;
 
@@ -31,12 +33,12 @@ class Seeder extends Injectable implements EventsAwareInterface
 
 
 
-    public function getEventsManager(): \Phalcon\Events\ManagerInterface
+    public function getEventsManager(): EventsManagerInterface
     {
         return $this->eventsManager;
     }
 
-    public function setEventsManager(\Phalcon\Events\ManagerInterface $eventsManager)
+    public function setEventsManager(EventsManagerInterface $eventsManager)
     {
         $this->eventsManager = $eventsManager;
     }
@@ -101,11 +103,11 @@ class Seeder extends Injectable implements EventsAwareInterface
         $eventsManager = $this->getEventsManager();
 
         foreach ($models as $model) {
-            if ($eventsManager instanceof \Phalcon\Events\ManagerInterface) {
+            if ($eventsManager instanceof EventsManagerInterface) {
                 $eventsManager->fire("seeder:beforeCreateTable", $model);
             }
 
-            $modelAnnotations = new \Sid\Phalcon\Seeder\Annotations($model);
+            $modelAnnotations = new SeederAnnotations($model);
 
             $source = $model->getSource();
 
@@ -127,7 +129,7 @@ class Seeder extends Injectable implements EventsAwareInterface
                 );
             }
 
-            if ($eventsManager instanceof \Phalcon\Events\ManagerInterface) {
+            if ($eventsManager instanceof EventsManagerInterface) {
                 $eventsManager->fire("seeder:afterCreateTable", $model);
             }
         }
@@ -141,7 +143,7 @@ class Seeder extends Injectable implements EventsAwareInterface
         $eventsManager = $this->getEventsManager();
 
         foreach ($models as $model) {
-            $modelAnnotations = new \Sid\Phalcon\Seeder\Annotations($model);
+            $modelAnnotations = new SeederAnnotations($model);
 
             $indexes = $modelAnnotations->getIndexes();
 
@@ -155,7 +157,7 @@ class Seeder extends Injectable implements EventsAwareInterface
 
 
 
-            if ($eventsManager instanceof \Phalcon\Events\ManagerInterface) {
+            if ($eventsManager instanceof EventsManagerInterface) {
                 $eventsManager->fire("seeder:beforeCreateModelIndexes", $model);
             }
 
@@ -173,7 +175,7 @@ class Seeder extends Injectable implements EventsAwareInterface
                 }
             }
 
-            if ($eventsManager instanceof \Phalcon\Events\ManagerInterface) {
+            if ($eventsManager instanceof EventsManagerInterface) {
                 $eventsManager->fire("seeder:afterCreateModelIndexes", $model);
             }
         }
@@ -187,7 +189,7 @@ class Seeder extends Injectable implements EventsAwareInterface
         $eventsManager = $this->getEventsManager();
 
         foreach ($models as $model) {
-            $modelAnnotations = new \Sid\Phalcon\Seeder\Annotations($model);
+            $modelAnnotations = new SeederAnnotations($model);
 
             $references = $modelAnnotations->getReferences();
 
@@ -201,7 +203,7 @@ class Seeder extends Injectable implements EventsAwareInterface
 
 
 
-            if ($eventsManager instanceof \Phalcon\Events\ManagerInterface) {
+            if ($eventsManager instanceof EventsManagerInterface) {
                 $eventsManager->fire("seeder:beforeCreateModelReferences", $model);
             }
 
@@ -223,7 +225,7 @@ class Seeder extends Injectable implements EventsAwareInterface
                 }
             }
 
-            if ($eventsManager instanceof \Phalcon\Events\ManagerInterface) {
+            if ($eventsManager instanceof EventsManagerInterface) {
                 $eventsManager->fire("seeder:afterCreateModelReferences", $model);
             }
         }
@@ -239,7 +241,7 @@ class Seeder extends Injectable implements EventsAwareInterface
         $modelsOrderedForSeedingInitialData = $this->orderForSeedingInitialData($models);
 
         foreach ($modelsOrderedForSeedingInitialData as $model) {
-            $modelAnnotations = new \Sid\Phalcon\Seeder\Annotations($model);
+            $modelAnnotations = new SeederAnnotations($model);
 
             $data = $modelAnnotations->getInitialData();
 
@@ -249,7 +251,7 @@ class Seeder extends Injectable implements EventsAwareInterface
 
 
 
-            if ($eventsManager instanceof \Phalcon\Events\ManagerInterface) {
+            if ($eventsManager instanceof EventsManagerInterface) {
                 $eventsManager->fire("seeder:beforeCreateModelData", $model);
             }
 
@@ -270,7 +272,7 @@ class Seeder extends Injectable implements EventsAwareInterface
                 }
             }
 
-            if ($eventsManager instanceof \Phalcon\Events\ManagerInterface) {
+            if ($eventsManager instanceof EventsManagerInterface) {
                 $eventsManager->fire("seeder:afterCreateModelData", $model);
             }
         }
@@ -296,7 +298,7 @@ class Seeder extends Injectable implements EventsAwareInterface
 
 
 
-            $modelAnnotations = new \Sid\Phalcon\Seeder\Annotations($model);
+            $modelAnnotations = new SeederAnnotations($model);
 
             $references = $modelAnnotations->getReferences();
 
@@ -306,7 +308,7 @@ class Seeder extends Injectable implements EventsAwareInterface
 
 
 
-            if ($eventsManager instanceof \Phalcon\Events\ManagerInterface) {
+            if ($eventsManager instanceof EventsManagerInterface) {
                 $eventsManager->fire("seeder:beforeDropModelReferences", $model);
             }
 
@@ -328,7 +330,7 @@ class Seeder extends Injectable implements EventsAwareInterface
                 }
             }
 
-            if ($eventsManager instanceof \Phalcon\Events\ManagerInterface) {
+            if ($eventsManager instanceof EventsManagerInterface) {
                 $eventsManager->fire("seeder:afterDropModelReferences", $model);
             }
         }
@@ -352,7 +354,7 @@ class Seeder extends Injectable implements EventsAwareInterface
 
 
 
-            if ($eventsManager instanceof \Phalcon\Events\ManagerInterface) {
+            if ($eventsManager instanceof EventsManagerInterface) {
                 $eventsManager->fire("seeder:beforeTruncateTable", $model);
             }
 
@@ -373,7 +375,7 @@ class Seeder extends Injectable implements EventsAwareInterface
                 );
             }
 
-            if ($eventsManager instanceof \Phalcon\Events\ManagerInterface) {
+            if ($eventsManager instanceof EventsManagerInterface) {
                 $eventsManager->fire("seeder:afterTruncateTable", $model);
             }
         }
@@ -397,7 +399,7 @@ class Seeder extends Injectable implements EventsAwareInterface
 
 
 
-            if ($eventsManager instanceof \Phalcon\Events\ManagerInterface) {
+            if ($eventsManager instanceof EventsManagerInterface) {
                 $eventsManager->fire("seeder:beforeDropTable", $model);
             }
 
@@ -414,7 +416,7 @@ class Seeder extends Injectable implements EventsAwareInterface
                 );
             }
 
-            if ($eventsManager instanceof \Phalcon\Events\ManagerInterface) {
+            if ($eventsManager instanceof EventsManagerInterface) {
                 $eventsManager->fire("seeder:afterDropTable", $model);
             }
         }
@@ -446,7 +448,7 @@ class Seeder extends Injectable implements EventsAwareInterface
 
         while (count($modelsWaitingToBeSorted) > 0) {
             foreach ($modelsWaitingToBeSorted as $source => $model) {
-                $modelAnnotations = new \Sid\Phalcon\Seeder\Annotations($model);
+                $modelAnnotations = new SeederAnnotations($model);
 
                 $references = $modelAnnotations->getReferences();
 

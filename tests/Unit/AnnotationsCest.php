@@ -5,6 +5,7 @@ namespace Tests\Unit;
 use Phalcon\Db\Column;
 use Phalcon\Di\Di;
 use Phalcon\Di\DiInterface;
+use Phalcon\Di\FactoryDefault\Cli as CliFactoryDefaultDi;
 use Sid\Phalcon\Seeder\Annotations;
 use Tests\Support\UnitTester;
 use Tests\Support\Users;
@@ -19,7 +20,7 @@ class AnnotationsCest
     {
         Di::reset();
 
-        $this->di = new \Phalcon\Di\FactoryDefault\Cli();
+        $this->di = new CliFactoryDefaultDi();
     }
 
 
