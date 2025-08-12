@@ -13,19 +13,12 @@ use Phalcon\Mvc\ModelInterface;
 
 class Annotations extends Injectable
 {
-    protected ModelInterface $model;
-
-
-
     /**
      * @throws Exception
      */
-    public function __construct(ModelInterface $model)
-    {
-        $this->model = $model;
-
-
-
+    public function __construct(
+        protected ModelInterface $model
+    ) {
         $di = $this->getDI();
 
         if (!($di instanceof DiInterface)) {
