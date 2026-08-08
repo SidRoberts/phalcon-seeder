@@ -10,10 +10,7 @@ use Sid\Phalcon\Seeder\Annotations as SeederAnnotations;
 
 class Seeder extends Injectable implements EventsAwareInterface
 {
-    /**
-     * @var EventsManagerInterface
-     */
-    protected $eventsManager;
+    protected EventsManagerInterface $eventsManager;
 
 
 
@@ -364,7 +361,7 @@ class Seeder extends Injectable implements EventsAwareInterface
                 $row->delete();
             }
 
-            $success = ($model::count() == 0);
+            $success = ($model::count() === 0);
 
             if (!$success) {
                 throw new Exception(
@@ -403,9 +400,7 @@ class Seeder extends Injectable implements EventsAwareInterface
                 $eventsManager->fire("seeder:beforeDropTable", $model);
             }
 
-            $success = $this->db->dropTable(
-                $source
-            );
+            $success = $this->db->dropTable($source);
 
             if (!$success) {
                 throw new Exception(
@@ -427,12 +422,12 @@ class Seeder extends Injectable implements EventsAwareInterface
     /**
      * This method is a complicated mess and will get rewritten at some point.
      * The problem it addresses is: when you seed the initial data, you can
-     * run into problems with foreign keys. For example, you might have two
-     * models: Posts and Comments. A Comment depends on a Post and so initial
-     * data needs to be added to Posts first and then to Comments. If you try to
-     * write to Comments first, the foreign key/reference will cause it to fail.
-     * This method sorts the models in an order that ensures that models come
-     * after any other models they depend on.
+     * run into problems with foreign keys.
+     *
+     * For example, if `Comment` depends on `Post`, then `Post` must be seeded
+     * first. This method sorts the given models so that each model appears only
+     * after all models it references (via foreign keys) have been placed
+     * earlier in the order.
      */
     protected function orderForSeedingInitialData(array $models): array
     {
